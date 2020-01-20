@@ -1,3 +1,5 @@
+#!vim:sts=0:ts=2:sw=2
+
 local data    = {}
 local emptAng = Angle()
 local enabled = CreateConVar("cl_playerlook", 1, nil, "Enables player models to look at nearby objects automatically."):GetBool()
