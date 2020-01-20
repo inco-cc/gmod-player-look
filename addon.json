@@ -1,0 +1,13 @@
+{
+	"title": "Automatic Player Looking",
+	"type": "effects",
+	"tags": ["realism", "scenic"],
+	"ignore":
+	[
+		"*.md",
+		"*.sh",
+		"icon.jpg",
+		".git/*",
+		"*.gma"
+	]
+}
