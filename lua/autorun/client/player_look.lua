@@ -3,9 +3,14 @@
 local data    = {}
 local emptAng = Angle()
 local enabled = CreateConVar("cl_playerlook", 1, nil, "Enables player models to look at nearby objects automatically."):GetBool()
+local rate    = CreateConVar("cl_playerlook_rate", 1, nil, "Controls the rate at which players turn their head."):GetFloat()
 
 cvars.AddChangeCallback("cl_playerlook", function(cvar, old, new)
 	enabled = tobool(new)
+end, "Default")
+
+cvars.AddChangeCallback("cl_playerlook_rate", function(cvar, old, new)
+	rate = tonumber(new)
 end, "Default")
 
 local function Data(pl)
@@ -68,10 +73,13 @@ hook.Add("player_spawn", "player_look", function(data)
 end)
 
 hook.Add("PrePlayerDraw", "player_look", function(pl)
+	local head = pl:LookupBone "ValveBiped.Bip01_Head1"
+	
+	if not head then return end
+	
 	local eyePos = EyePos()
 	local pos = pl:EyePos()
 	local ang = pl:EyeAngles()
-	local head = pl:LookupBone "ValveBiped.Bip01_Head1"
 
 	if not enabled or eyePos:Distance(pos) > 512 then
 		if data.active then
@@ -99,10 +107,10 @@ hook.Add("PrePlayerDraw", "player_look", function(pl)
 		newAng.y = math.Clamp(newAng.y, -45, 45)
 		newAng.x = math.Clamp(newAng.x / 2, -25, 25)
 
-		data.ang = LerpAngle(FrameTime() * 1, data.ang, newAng)
+		data.ang = LerpAngle(FrameTime() * rate, data.ang, newAng)
 		pl:SetEyeTarget(entPos)
 	else
-		data.ang = LerpAngle(FrameTime() * 1, data.ang, emptAng)
+		data.ang = LerpAngle(FrameTime() * rate, data.ang, emptAng)
 	end
 
 	pl:ManipulateBoneAngles(head, Angle(0, -data.ang.x, data.ang.y))
