@@ -67,10 +67,10 @@ for i, pl in pairs(player.GetAll()) do
 	Reset(pl)
 end
 
-gameevent.Listen "player_spawn"
+--[[gameevent.Listen "player_spawn"
 hook.Add("player_spawn", "player_look", function(data)
 	Reset(data.userid)
-end)
+end)]]
 
 hook.Add("PrePlayerDraw", "player_look", function(pl)
 	local head = pl:LookupBone "ValveBiped.Bip01_Head1"
@@ -78,8 +78,11 @@ hook.Add("PrePlayerDraw", "player_look", function(pl)
 	if not head then return end
 	
 	local eyePos = EyePos()
-	local pos = pl:EyePos()
-	local ang = pl:EyeAngles()
+	local pos    = pl:EyePos()
+	local ang    = pl:EyeAngles()
+	local data   = Data(pl)
+	
+	if not data then Reset(pl) return end
 
 	if not enabled or eyePos:Distance(pos) > 512 then
 		if data.active then
@@ -93,7 +96,6 @@ hook.Add("PrePlayerDraw", "player_look", function(pl)
 
 	data.active = true
 
-	local data = Data(pl)
 	local time = CurTime()
 
 	if time > data.time then
